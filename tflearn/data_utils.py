@@ -43,7 +43,20 @@ def to_categorical(y, nb_classes=None):
         y: `array`. Class vector to convert.
         nb_classes: `unused`. Used for older code compatibility.
     """
-    return (y[:, None] == np.unique(y)).astype(np.float32)
+    # return (y[:, None] == np.unique(y)).astype(np.float32)
+        # return (y[:, None] == np.unique(y)).astype(np.float32)
+    y = np.asarray(y, dtype='int32')
+    # high dimensional array warning        
+    if len(y.shape) > 2:        
+        warnings.warn('{}-dimensional array is used as input array.'.format(len(y.shape)), stacklevel=2)        
+    # flatten high dimensional array        
+    if len(y.shape) > 1:        
+        y = y.reshape(-1)        
+    if not nb_classes:        
+        nb_classes = np.max(y)+1        
+    Y = np.zeros((len(y), nb_classes))        
+    Y[np.arange(len(y)),y] = 1.        
+    return Y
 
 
 # =====================
